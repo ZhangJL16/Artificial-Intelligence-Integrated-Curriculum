@@ -15,7 +15,7 @@ def args_parse():
     parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")
     parser.add_argument("--n_cpu", type=int, default=2, help="number of cpu threads to use during batch generation")
     parser.add_argument("--latent_dim", type=int, default=100, help="dimensionality of the latent space")
-    parser.add_argument("--img_size", type=int, default=256, help="size of each image dimension")
+    parser.add_argument("--img_size", type=int, default=32, help="size of each image dimension")
     parser.add_argument("--channels", type=int, default=3, help="number of image channels")
     parser.add_argument("--sample_interval", type=int, default=200, help="interval between image sampling")
     parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")
@@ -151,18 +151,12 @@ def center_crop_arr(pil_image, image_size):
 def train():
     opt = args_parse()
 
-    # transform = transforms.Compose(
-    #     [
-    #         transforms.Resize((256, 256)),
-    #         transforms.ToTensor(),
-    #         transforms.Normalize([0.5], [0.5])
-    #     ])
-    transform = transforms.Compose([
-        transforms.Lambda(lambda pil_image: center_crop_arr(pil_image, 256)),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], inplace=True)
-    ])
+    transform = transforms.Compose(
+         [
+             transforms.Resize((256, 256)),
+             transforms.ToTensor(),
+             transforms.Normalize([0.5], [0.5])
+         ])
 
     data = datasets.ImageFolder('../DiT-main/data', transform=transform)
 
